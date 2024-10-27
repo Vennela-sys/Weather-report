@@ -1,0 +1,45 @@
+*HTML*
+<!DOCTYPE html>
+<html ng-app="weatherApp">
+<head>
+  <title>Weather Report</title>
+  <script src="(link unavailable)"></script>
+</head>
+<body ng-controller="WeatherController">
+  <h1>Weather Report</h1>
+  <input type="text" ng-model="city" placeholder="Enter city name">
+  <button ng-click="getWeather()">Get Weather</button>
+  <div ng-show="weatherData">
+    <p>City: {{ weatherData.name }}</p>
+    <p>Temperature: {{ weatherData.main.temp }}°C</p>
+    <p>Humidity: {{ weatherData.main.humidity }}%</p>
+    <p>Weather: {{ weatherData.weather[0].description }}</p>
+  </div>
+  <div ng-show="error">
+    <p>{{ error }}</p>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
+*JavaScript (script.js)*
+angular.module('weatherApp', [])
+  .controller('WeatherController', ['$scope', '$http', function($scope, $http) {
+    $scope.city = '';
+    $scope.weatherData = null;
+    $scope.error = null;
+
+    $scope.getWeather = function() {
+      var apiKey = 'YOUR_OPENWEATHERMAP_API_KEY';
+      var url = '(link unavailable)' + $scope.city + '&units=metric&appid=' + apiKey;
+
+      $http.get(url)
+        .then(function(response) {
+          $scope.weatherData = response.data;
+          $scope.error = null;
+        })
+        .catch(function(error) {
+          $scope.error = error.data.message;
+          $scope.weatherData = null;
+        });
+    };
+  }]);
